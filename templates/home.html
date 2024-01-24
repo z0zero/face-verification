@@ -2,52 +2,86 @@
 
 {% block body %}
 <div class="container mx-auto mt-4">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    
-    <!-- Flex container for side-by-side layout -->
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="flashes flex flex-col md:flex-row flex-wrap justify-center items-center mb-4">
+    {% for message in messages %}
+    <p class="alert bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3 my-2 mx-auto" role="alert"
+      style="max-width: 45%;">
+      {{ message }}
+    </p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('home') }}" method="post" enctype="multipart/form-data">
     <div class="flex flex-wrap -mx-3 mb-6 justify-center">
-        <!-- Form to upload KTP image -->
-        <div class="form-group md:flex-1 px-3 mb-6">
-            <label for="ktpImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar Foto KTP</label>
-            <input type="file" id="ktpImage" name="ktpImage" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500" onchange="previewImage(event, 'ktpPreview')">
-            <div class="flex justify-center">
-                <img id="ktpPreview" class="hidden w-64 h-auto border" />
-            </div>
+      <div class="form-group md:flex-1 px-3 mb-6">
+        <label for="ktpImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar
+          Foto KTP</label>
+        <input type="file" id="ktpImage" name="ktpImage"
+          class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
+          onchange="previewImage(event, 'ktpPreview')">
+        <div class="flex justify-center items-center">
+          <img id="ktpPreview" class="hidden w-full max-w-xs h-auto border" />
         </div>
+      </div>
 
-        <!-- Form to upload Face image -->
-        <div class="form-group md:flex-1 px-3 mb-6">
-            <label for="faceImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar Foto Wajah</label>
-            <input type="file" id="faceImage" name="faceImage" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500" onchange="previewImage(event, 'facePreview')">
-            <div class="flex justify-center">
-                <img id="facePreview" class="hidden w-64 h-auto border" />
-            </div>
+      <div class="form-group md:flex-1 px-3 mb-6">
+        <label for="faceImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar
+          Foto Wajah</label>
+        <input type="file" id="faceImage" name="faceImage"
+          class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
+          onchange="previewImage(event, 'facePreview')">
+        <div class="flex justify-center items-center">
+          <img id="facePreview" class="hidden w-full max-w-xs h-auto border" />
         </div>
+      </div>
     </div>
 
-    <!-- Detection button -->
     <div class="flex justify-center mt-4">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Deteksi!</button>
+      <button type="submit"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Deteksi!</button>
     </div>
-</div>
+  </form>
 
-<script>
+  <!-- Menampilkan hasil verifikasi -->
+  {% if verification_result is not none %}
+  <div class="verification-result mt-4">
+    <h3 class="text-center text-lg">Hasil Verifikasi</h3>
+    {% if verification_result %}
+    <p class="text-center text-green-500">Verifikasi berhasil: Orang yang sama.</p>
+    {% else %}
+    <p class="text-center text-red-500">Verifikasi gagal: Orang yang berbeda.</p>
+    {% endif %}
+    <!-- Tampilkan skor cosine similarity -->
+    {% if cosine_score is not none %}
+    <p class="text-center">Skor Kesamaan: {{ cosine_score }}</p>
+    {% else %}
+    <p class="text-center">Skor Kesamaan: Tidak dapat dihitung</p>
+    {% endif %}
+    <div class="image-comparison">
+      <!-- Tampilkan gambar wajah KTP yang telah diproses -->
+      {% if ktp_face_path %}
+      <img src="{{ url_for('static', filename=ktp_face_path) }}" alt="Processed KTP Face">
+      {% endif %}
+
+      <!-- Tampilkan gambar wajah yang diunggah dan telah diproses -->
+      {% if face_face_path %}
+      <img src="{{ url_for('static', filename=face_face_path) }}" alt="Processed Face Image">
+      {% endif %}
+    </div>
+  {% endif %}
+  <script>
     function previewImage(event, previewId) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById(previewId);
-            output.src = reader.result;
-            output.classList.remove('hidden');
-        };
-        reader.readAsDataURL(event.target.files[0]);
+      var reader = new FileReader();
+      reader.onload = function () {
+        var output = document.getElementById(previewId);
+        output.src = reader.result;
+        output.classList.remove('hidden');
+      };
+      reader.readAsDataURL(event.target.files[0]);
     }
-</script>
+  </script>
 {% endblock %}
