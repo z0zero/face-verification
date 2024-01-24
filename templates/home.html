@@ -1,33 +1,53 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container">
+<div class="container mx-auto mt-4">
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class="flashes">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
     {% endwith %}
-    <!-- Bank logo and title here -->
-    <div class="forms-container">
+    
+    <!-- Flex container for side-by-side layout -->
+    <div class="flex flex-wrap -mx-3 mb-6 justify-center">
         <!-- Form to upload KTP image -->
-        <div class="form-group">
-            <label for="ktpImage">Input Gambar Foto KTP</label>
-            <input type="file" id="ktpImage" name="ktpImage">
+        <div class="form-group md:flex-1 px-3 mb-6">
+            <label for="ktpImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar Foto KTP</label>
+            <input type="file" id="ktpImage" name="ktpImage" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500" onchange="previewImage(event, 'ktpPreview')">
+            <div class="flex justify-center">
+                <img id="ktpPreview" class="hidden w-64 h-auto border" />
+            </div>
         </div>
 
         <!-- Form to upload Face image -->
-        <div class="form-group">
-            <label for="faceImage">Input Gambar Foto Wajah</label>
-            <input type="file" id="faceImage" name="faceImage">
+        <div class="form-group md:flex-1 px-3 mb-6">
+            <label for="faceImage" class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Input Gambar Foto Wajah</label>
+            <input type="file" id="faceImage" name="faceImage" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500" onchange="previewImage(event, 'facePreview')">
+            <div class="flex justify-center">
+                <img id="facePreview" class="hidden w-64 h-auto border" />
+            </div>
         </div>
     </div>
+
     <!-- Detection button -->
-    <div class="button-container">
-        <button type="submit">Deteksi!</button>
+    <div class="flex justify-center mt-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Deteksi!</button>
     </div>
 </div>
+
+<script>
+    function previewImage(event, previewId) {
+        var reader = new FileReader();
+        reader.onload = function(){
+            var output = document.getElementById(previewId);
+            output.src = reader.result;
+            output.classList.remove('hidden');
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
 {% endblock %}
