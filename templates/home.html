@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <!-- Bank logo and title here -->
+    <div class="forms-container">
+        <!-- Form to upload KTP image -->
+        <div class="form-group">
+            <label for="ktpImage">Input Gambar Foto KTP</label>
+            <input type="file" id="ktpImage" name="ktpImage">
+        </div>
+
+        <!-- Form to upload Face image -->
+        <div class="form-group">
+            <label for="faceImage">Input Gambar Foto Wajah</label>
+            <input type="file" id="faceImage" name="faceImage">
+        </div>
+
+        <!-- Detection button -->
+        <button type="submit">Deteksi!</button>
+    </div>
+</div>
+{% endblock %}
