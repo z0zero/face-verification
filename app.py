@@ -48,22 +48,24 @@ def home():
             face_image.save(face_path)
 
             try:
-                print("Mulai verifikasi wajah")  # Debugging
-                verification_result, cosine_score = verify_faces(ktp_path, face_path)
-                print(f"Hasil verifikasi: {verification_result}, Skor kosinus: {cosine_score}")  # Debugging statement
-
                 print("Mulai pemotongan wajah")  # Debugging
-                ktp_faces = crop_face(ktp_path, app.config['PROCESSED_FOLDER'])  # Gunakan fungsi crop_face
-                print(f"Jumlah wajah terdeteksi di KTP: {len(ktp_faces)}")  # Debugging statement
-                if ktp_faces:
-                    ktp_face_path = ktp_faces[0]
+                ktp_faces = crop_face(ktp_path, app.config['PROCESSED_FOLDER'])
+                face_faces = crop_face(face_path, app.config['PROCESSED_FOLDER'])
 
-                face_faces = crop_face(face_path, app.config['PROCESSED_FOLDER'])  # Gunakan fungsi crop_face
-                print(f"Jumlah wajah terdeteksi di gambar wajah: {len(face_faces)}")  # Debugging statement
-                if face_faces:
+                # Pastikan setidaknya satu wajah terdeteksi di setiap gambar sebelum verifikasi
+                if ktp_faces and face_faces:
+                    ktp_face_path = ktp_faces[0]
                     face_face_path = face_faces[0]
 
-                flash('Verifikasi berhasil: Orang yang sama.' if verification_result else 'Verifikasi gagal: Orang yang berbeda.')
+                    print("Mulai verifikasi wajah")  # Debugging
+                    verification_result, cosine_score = verify_faces(ktp_face_path, face_face_path)
+                    print(f"Hasil verifikasi: {verification_result}, Skor kosinus: {cosine_score}")  # Debugging statement
+
+                    flash('Verifikasi berhasil: Orang yang sama.' if verification_result else 'Verifikasi gagal: Orang yang berbeda.')
+                else:
+                    flash('Tidak dapat mendeteksi wajah di salah satu atau kedua gambar.')
+                    return redirect(url_for('home'))
+
             except Exception as e:
                 print(f"Terjadi kesalahan: {str(e)}")  # Debugging
                 flash(str(e))

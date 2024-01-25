@@ -31,11 +31,14 @@ def crop_face(image_path, output_folder):
         # Crop the face from the image
         cropped_face = image[y:y+h, x:x+w]
 
-        # Save the cropped face
+        # Resize the cropped face to 160x160
+        resized_face = cv2.resize(cropped_face, (160, 160))
+
+        # Save the resized face
         base_filename = os.path.basename(image_path)
         filename, ext = os.path.splitext(base_filename)
         processed_image_path = os.path.join(output_folder, f'{filename}_face_{i}{ext}')
-        cv2.imwrite(processed_image_path, cropped_face)
+        cv2.imwrite(processed_image_path, resized_face)
         cropped_faces.append(processed_image_path)
 
     return cropped_faces

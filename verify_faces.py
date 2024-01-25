@@ -19,10 +19,10 @@ def cosine_similarity_base_search_algorithm(ktp_embedding, face_embedding, cosin
         
     return verification_result, cosine_score
 
-def verify_faces(ktp_path, face_path, cosine_threshold=0.45):
+def verify_faces(ktp_path, face_path, cosine_threshold=0.5, enforce_detection=False):
     try:
-        ktp = DeepFace.represent(img_path=ktp_path, model_name='Facenet512')
-        face = DeepFace.represent(img_path=face_path, model_name='Facenet512')
+        ktp = DeepFace.represent(img_path=ktp_path, model_name='Facenet512', enforce_detection=enforce_detection)
+        face = DeepFace.represent(img_path=face_path, model_name='Facenet512', enforce_detection=enforce_detection)
 
         ktp_embedding = ktp[0]['embedding']
         face_embedding = face[0]['embedding']
