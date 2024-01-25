@@ -61,15 +61,22 @@
     {% else %}
     <p class="text-center">Skor Kesamaan: Tidak dapat dihitung</p>
     {% endif %}
-    <div class="image-comparison">
+    <!-- Tampilkan gambar wajah KTP dan wajah yang diunggah berdampingan -->
+    <div class="image-comparison flex flex-wrap justify-center items-center mt-4">
       <!-- Tampilkan gambar wajah KTP yang telah diproses -->
       {% if ktp_face_path %}
-      <img src="{{ url_for('static', filename=ktp_face_path) }}" alt="Processed KTP Face">
+      <div class="max-w-md mx-2">
+        <img src="{{ url_for('static', filename=ktp_face_path) }}" alt="Wajah pada KTP" class="w-full h-48 border rounded">
+        <p class="text-center text-xs mt-2">Wajah pada KTP</p>
+      </div>
       {% endif %}
 
       <!-- Tampilkan gambar wajah yang diunggah dan telah diproses -->
       {% if face_face_path %}
-      <img src="{{ url_for('static', filename=face_face_path) }}" alt="Processed Face Image">
+      <div class="max-w-md mx-2">
+        <img src="{{ url_for('static', filename=face_face_path) }}" alt="Wajah yang diunggah" class="w-full h-48 border rounded">
+        <p class="text-center text-xs mt-2">Wajah yang diunggah</p>
+      </div>
       {% endif %}
     </div>
   {% endif %}
