@@ -1,5 +1,5 @@
 
-# Face Verification Application
+# KTP/ID Face Verification
 
 Aplikasi ini melakukan verifikasi wajah dengan membandingkan wajah dari dua gambar yang diunggah pengguna. Aplikasi ini menggunakan Flask sebagai framework web dan menggunakan `dlib` serta `DeepFace` untuk mendeteksi dan memverifikasi wajah.
 
