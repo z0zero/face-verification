@@ -1,0 +1,7 @@
+Flask
+Werkzeug
+dlib
+opencv-python
+scikit-learn
+deepface
+numpy
